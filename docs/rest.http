@@ -1,0 +1,40 @@
+
+@url = http://localhost:3000
+@identity_provider = http://localhost:8080
+
+###
+# @name token
+POST {{identity_provider}}/realms/provideremailgo/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=emailgo&username=leandro.tilio@gmail.com&password=123456&grant_type=password
+
+###
+@access_token = {{token.response.body.access_token}}
+
+###
+
+POST {{url}}/campaigns
+Authorization: Bearer {{access_token}}
+
+{
+	"name": "Pastel",
+	"content": "Isso é um gato preto",
+	"emails":  ["teste@email.com", "Gato@email.com"]
+}
+
+###
+
+GET {{url}}/ping
+
+###
+GET  {{url}}/campaigns/crka3g4uqlqj5q12qu7g
+Authorization: Bearer {{access_token}}
+
+###
+
+DELETE {{url}}/campaigns/crh0iosuqlqgop3rk46g
+Authorization: Bearer {{access_token}}
+
+###
+
