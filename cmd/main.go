@@ -4,13 +4,20 @@ import (
 	"EmailGO/internal/campaign"
 	"EmailGO/internal/endpoints"
 	"EmailGO/internal/infra/database"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	r := chi.NewRouter()
 
