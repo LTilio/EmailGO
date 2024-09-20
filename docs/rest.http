@@ -13,28 +13,37 @@ client_id=emailgo&username=leandro.tilio@gmail.com&password=123456&grant_type=pa
 @access_token = {{token.response.body.access_token}}
 
 ###
-
+# @name campaign_create
 POST {{url}}/campaigns
 Authorization: Bearer {{access_token}}
 
 {
-	"name": "Pastel",
-	"content": "Isso é um gato preto",
-	"emails":  ["teste@email.com", "Gato@email.com"]
+	"name": "Teste API",
+	"content": "TESTE DE API DE ENVIO DE EMAILS EM MASSA",
+	"emails":  ["teste@email.com", "leandro.tilio@gmail.com", "tilio.developer@gmail.com","psigabrielasalgado@gmail.com"]
 }
 
 ###
 
+###
+
+@campaign_id = {{campaign_create.response.body.id}}
+
+###
 GET {{url}}/ping
 
 ###
-GET  {{url}}/campaigns/crka3g4uqlqj5q12qu7g
+GET  {{url}}/campaigns/{{campaign_id}}
 Authorization: Bearer {{access_token}}
 
 ###
 
-DELETE {{url}}/campaigns/crh0iosuqlqgop3rk46g
+DELETE {{url}}/campaigns/{{campaign_id}}
 Authorization: Bearer {{access_token}}
 
 ###
 
+PATCH  {{url}}/campaigns/{{campaign_id}}
+Authorization: Bearer {{access_token}}
+
+###

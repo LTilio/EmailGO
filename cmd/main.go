@@ -4,6 +4,7 @@ import (
 	"EmailGO/internal/campaign"
 	"EmailGO/internal/endpoints"
 	"EmailGO/internal/infra/database"
+	"EmailGO/internal/infra/mail"
 	"log"
 	"net/http"
 
@@ -30,6 +31,7 @@ func main() {
 	db := database.NewDb()
 	campaignService := campaign.ServiceImp{
 		Repository: &database.CampaignRepository{Db: db},
+		SendMail:   mail.SendMail,
 	}
 	handler := endpoints.Handler{
 		CampaignService: &campaignService,
@@ -38,12 +40,13 @@ func main() {
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("pong"))
 	})
+	r.Get("/campaigns/{id}", endpoints.HandlerError(handler.CampaignGetById))
 
 	r.Route("/campaigns", func(r chi.Router) {
 		r.Use(endpoints.Auth)
 		r.Post("/", endpoints.HandlerError(handler.CampaignPost))
-		r.Get("/{id}", endpoints.HandlerError(handler.CampaignGetById))
 		r.Delete("/{id}", endpoints.HandlerError(handler.CampaignDelete))
+		r.Patch("/{id}", endpoints.HandlerError(handler.CampaignStart))
 	})
 
 	http.ListenAndServe(":3000", r)

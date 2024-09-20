@@ -35,3 +35,8 @@ func (c *CampaignRepository) Delete(campaign *campaign.Campaign) error {
 	}
 	return tx.Commit().Error
 }
+
+func (c *CampaignRepository) Update(campaign *campaign.Campaign) error {
+	tx := c.Db.Save(campaign)
+	return tx.Error
+}

@@ -10,10 +10,12 @@ type Service interface {
 	Create(newCampaign contract.NewCampaign) (string, error)
 	GetBy(id string) (*contract.CampaignResponse, error)
 	Delete(id string) error
+	Start(id string) error
 }
 
 type ServiceImp struct {
 	Repository Repository
+	SendMail   func(campaign *Campaign) error
 }
 
 func (s *ServiceImp) Create(newCampaign contract.NewCampaign) (string, error) {
@@ -50,21 +52,52 @@ func (s *ServiceImp) GetBy(id string) (*contract.CampaignResponse, error) {
 
 func (s *ServiceImp) Delete(id string) error {
 
-	campaign, err := s.Repository.GetBy(id)
+	campaign, err := s.getAndValidateStatusIsPending(id)
 
 	if err != nil {
-		return internalerror.ProcessError(err)
-	}
-
-	if campaign.Status != Pending {
-		return errors.New("Campaign status invalid")
+		return err
 	}
 
 	campaign.Delete()
 	err = s.Repository.Delete(campaign)
 
 	if err != nil {
-		return internalerror.ProcessError(err)
+		return internalerror.ErrInternal
 	}
 	return nil
+}
+
+func (s *ServiceImp) Start(id string) error {
+
+	campaignSaved, err := s.getAndValidateStatusIsPending(id)
+
+	if err != nil {
+		return err
+	}
+
+	err = s.SendMail(campaignSaved)
+	if err != nil {
+		return internalerror.ErrInternal
+	}
+
+	campaignSaved.Done()
+	err = s.Repository.Update(campaignSaved)
+	if err != nil {
+		return internalerror.ErrInternal
+	}
+
+	return nil
+}
+
+func (s *ServiceImp) getAndValidateStatusIsPending(id string) (*Campaign, error) {
+	campaign, err := s.Repository.GetBy(id)
+
+	if err != nil {
+		return nil, internalerror.ProcessError(err)
+	}
+
+	if campaign.Status != Pending {
+		return nil, errors.New("Campaign status invalid")
+	}
+	return campaign, nil
 }
