@@ -14,6 +14,7 @@ type Endpoint func(w http.ResponseWriter, r *http.Request) (interface{}, int, er
 func HandlerError(handler Endpoint) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		obj, status, err := handler(w, r)
+		w.Header().Set("Content-Type", "application/json")
 		if err != nil {
 			if errors.Is(err, internalerror.ErrInternal) {
 				render.Status(r, 500)
