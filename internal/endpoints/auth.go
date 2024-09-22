@@ -11,10 +11,6 @@ import (
 	"github.com/go-chi/render"
 )
 
-type contextKey string
-
-const emailContextKey contextKey = "email"
-
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -47,7 +43,7 @@ func Auth(next http.Handler) http.Handler {
 		claims := token.Claims.(jwtgo.MapClaims)
 		email := claims["email"]
 
-		ctx := context.WithValue(r.Context(), emailContextKey, email)
+		ctx := context.WithValue(r.Context(), "email", email)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

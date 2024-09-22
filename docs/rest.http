@@ -20,10 +20,8 @@ Authorization: Bearer {{access_token}}
 {
 	"name": "Teste API",
 	"content": "TESTE DE API DE ENVIO DE EMAILS EM MASSA",
-	"emails":  ["teste@email.com", "leandro.tilio@gmail.com", "tilio.developer@gmail.com","psigabrielasalgado@gmail.com"]
+	"emails":  ["teste@email.com", "leandro.tilio@gmail.com"]
 }
-
-###
 
 ###
 
