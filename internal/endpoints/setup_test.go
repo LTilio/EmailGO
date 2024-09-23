@@ -38,7 +38,8 @@ func addParameter(req *http.Request, keyParameter string, valueParameter string)
 	return req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, chiContext))
 }
 
-func addContext(req *http.Request, keyParameter string, valueParameter string) *http.Request {
-	ctx := context.WithValue(req.Context(), keyParameter, valueParameter)
+func addContext(req *http.Request, key contextKey, valueParameter string) *http.Request {
+	// Converter a chave para o tipo contextKey
+	ctx := context.WithValue(req.Context(), key, valueParameter)
 	return req.WithContext(ctx)
 }

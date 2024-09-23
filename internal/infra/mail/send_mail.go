@@ -1,7 +1,7 @@
 package mail
 
 import (
-	"EmailGO/internal/campaign"
+	"EmailGO/internal/domain/campaign"
 	"fmt"
 	"os"
 	"time"

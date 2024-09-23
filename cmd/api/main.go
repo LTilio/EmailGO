@@ -1,7 +1,7 @@
 package main
 
 import (
-	"EmailGO/internal/campaign"
+	"EmailGO/internal/domain/campaign"
 	"EmailGO/internal/endpoints"
 	"EmailGO/internal/infra/database"
 	"EmailGO/internal/infra/mail"

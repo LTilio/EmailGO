@@ -11,7 +11,7 @@ import (
 
 var (
 	createdByExpected = "teste1@teste.com.br"
-	body              = contract.NewCampaign{
+	body              = contract.NewCampaignRequest{
 		Name:    "teste",
 		Content: "Hi everyone",
 		Emails:  []string{"teste@teste.com"},
@@ -20,7 +20,7 @@ var (
 
 func Test_CampaignsPost_201(t *testing.T) {
 	setup()
-	service.On("Create", mock.MatchedBy(func(request contract.NewCampaign) bool {
+	service.On("Create", mock.MatchedBy(func(request contract.NewCampaignRequest) bool {
 		if request.Name == body.Name &&
 			request.Content == body.Content &&
 			request.CreatedBy == createdByExpected {
@@ -30,7 +30,7 @@ func Test_CampaignsPost_201(t *testing.T) {
 		}
 	})).Return("34x", nil)
 	req, rr := newHttpTest("POST", "/", body)
-	req = addContext(req, "email", createdByExpected)
+	req = addContext(req, emailContextKey, createdByExpected)
 
 	_, status, err := handler.CampaignPost(rr, req)
 
@@ -42,7 +42,7 @@ func Test_CampaignsPost_Err(t *testing.T) {
 	setup()
 	service.On("Create", mock.Anything).Return("", fmt.Errorf("error"))
 	req, rr := newHttpTest("POST", "/", body)
-	req = addContext(req, "email", createdByExpected)
+	req = addContext(req, emailContextKey, createdByExpected)
 
 	_, _, err := handler.CampaignPost(rr, req)
 

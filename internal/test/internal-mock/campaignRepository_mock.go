@@ -1,7 +1,7 @@
 package internalmock
 
 import (
-	"EmailGO/internal/campaign"
+	"EmailGO/internal/domain/campaign"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -35,6 +35,9 @@ func (r *CampaignRepositoryMock) Update(campaign *campaign.Campaign) error {
 }
 
 func (r *CampaignRepositoryMock) GetCampaignsToBeSent() ([]campaign.Campaign, error) {
-
-	return nil, nil
+	args := r.Called()
+	if args.Error(1) != nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([]campaign.Campaign), nil
 }

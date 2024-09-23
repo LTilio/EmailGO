@@ -1,7 +1,7 @@
 package database
 
 import (
-	"EmailGO/internal/campaign"
+	"EmailGO/internal/domain/campaign"
 
 	"gorm.io/gorm"
 )

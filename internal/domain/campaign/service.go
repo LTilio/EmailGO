@@ -7,7 +7,7 @@ import (
 )
 
 type Service interface {
-	Create(newCampaign contract.NewCampaign) (string, error)
+	Create(newCampaign contract.NewCampaignRequest) (string, error)
 	GetBy(id string) (*contract.CampaignResponse, error)
 	Delete(id string) error
 	Start(id string) error
@@ -18,7 +18,7 @@ type ServiceImp struct {
 	SendMail   func(campaign *Campaign) error
 }
 
-func (s *ServiceImp) Create(newCampaign contract.NewCampaign) (string, error) {
+func (s *ServiceImp) Create(newCampaign contract.NewCampaignRequest) (string, error) {
 
 	campaign, err := NewCampaign(newCampaign.Name, newCampaign.Content, newCampaign.Emails, newCampaign.CreatedBy)
 	if err != nil {
@@ -67,7 +67,6 @@ func (s *ServiceImp) Delete(id string) error {
 	return nil
 }
 
-// TODO: make unit test
 func (s *ServiceImp) SendMailAndUpdateStatus(campaignSaved *Campaign) {
 
 	err := s.SendMail(campaignSaved)
@@ -90,7 +89,7 @@ func (s *ServiceImp) Start(id string) error {
 	}
 
 	// dá pra chamar metodos também, só colocar o go na frente e esse metodo vai ser chamado em paralero
-	go s.SendMailAndUpdateStatus(campaignSaved)
+	// go s.SendMailAndUpdateStatus(campaignSaved)
 
 	// //função anonima em paralelo - melhorando a performance do metodo
 	// go func() {
