@@ -1,30 +1,32 @@
-
 @url = http://localhost:3000
 @identity_provider = http://localhost:8080
 
 ###
-# @name token
-POST {{identity_provider}}/realms/provideremailgo/protocol/openid-connect/token
-Content-Type: application/x-www-form-urlencoded
+# @name login
+POST {{url}}/login
+Content-Type: application/json
 
-client_id=emailgo&username=leandro.tilio@gmail.com&password=123456&grant_type=password
+{
+  "username": "leandro.tilio@gmail.com",
+  "password": "123456"
+}
 
 ###
-@access_token = {{token.response.body.access_token}}
+@access_token = {{login.response.body.access_token}}
 
 ###
 # @name campaign_create
 POST {{url}}/campaigns
 Authorization: Bearer {{access_token}}
+Content-Type: application/json
 
 {
-	"name": "Teste API",
-	"content": "TESTE DE API DE ENVIO DE EMAILS EM MASSA",
-	"emails":  ["teste@email.com", "leandro.tilio@gmail.com"]
+  "name": "Teste API com endpoint de login",
+  "content": "TESTE DE API DE ENVIO DE EMAILS EM MASSA",
+  "emails":  ["teste@email.com"]
 }
 
 ###
-
 @campaign_id = {{campaign_create.response.body.id}}
 
 ###
@@ -35,13 +37,9 @@ GET  {{url}}/campaigns/{{campaign_id}}
 Authorization: Bearer {{access_token}}
 
 ###
-
 DELETE {{url}}/campaigns/{{campaign_id}}
 Authorization: Bearer {{access_token}}
 
 ###
-
 PATCH  {{url}}/campaigns/{{campaign_id}}
 Authorization: Bearer {{access_token}}
-
-###

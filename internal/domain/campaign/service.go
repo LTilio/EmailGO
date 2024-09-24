@@ -89,7 +89,7 @@ func (s *ServiceImp) Start(id string) error {
 	}
 
 	// dá pra chamar metodos também, só colocar o go na frente e esse metodo vai ser chamado em paralero
-	// go s.SendMailAndUpdateStatus(campaignSaved)
+	go s.SendMailAndUpdateStatus(campaignSaved)
 
 	// //função anonima em paralelo - melhorando a performance do metodo
 	// go func() {

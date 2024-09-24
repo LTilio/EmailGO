@@ -41,7 +41,7 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 	r.Get("/campaigns/{id}", endpoints.HandlerError(handler.CampaignGetById))
-
+	r.Post("/login", endpoints.HandlerError(endpoints.Login))
 	r.Route("/campaigns", func(r chi.Router) {
 		r.Use(endpoints.Auth)
 		r.Post("/", endpoints.HandlerError(handler.CampaignPost))
