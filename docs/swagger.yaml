@@ -1,0 +1,245 @@
+basePath: /
+definitions:
+  contract.CampaignResponse:
+    properties:
+      amount_of_emails:
+        type: integer
+      content:
+        type: string
+      created_by:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  contract.NewCampaignRequest:
+    properties:
+      content:
+        type: string
+      createdBy:
+        type: string
+      emails:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+    type: object
+  endpoints.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  endpoints.TokenResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+  internalerror.ErrorResponse:
+    properties:
+      error:
+        example: invalid request
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: API para envio de emails em massa.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: EmailGo
+  version: "1.0"
+paths:
+  /campaigns:
+    post:
+      consumes:
+      - application/json
+      description: Cria uma nova campanha de envio de emails
+      parameters:
+      - description: Dados da nova campanha
+        in: body
+        name: campaign
+        required: true
+        schema:
+          $ref: '#/definitions/contract.NewCampaignRequest'
+      - description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Campanha criada
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Requisição inválida
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+      summary: Criar nova campanha
+      tags:
+      - campaigns
+  /campaigns/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove uma campanha com base no ID fornecido
+      parameters:
+      - description: ID da campanha
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mensagem de sucesso
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Não autorizado
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "404":
+          description: Campanha não encontrada
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+      summary: Deletar campanha por ID
+      tags:
+      - campaigns
+    get:
+      consumes:
+      - application/json
+      description: Recupera os detalhes de uma campanha com base no ID fornecido
+      parameters:
+      - description: ID da campanha
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Detalhes da campanha
+          schema:
+            $ref: '#/definitions/contract.CampaignResponse'
+        "401":
+          description: Não autorizado
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "404":
+          description: Campanha não encontrada
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+      summary: Obter campanha por ID
+      tags:
+      - campaigns
+  /campaigns/{id}/start:
+    patch:
+      consumes:
+      - application/json
+      description: Altera o status da campanha para "Iniciada" com base no ID fornecido
+      parameters:
+      - description: ID da campanha
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Campanha iniciada com sucesso
+          schema:
+            $ref: '#/definitions/contract.CampaignResponse'
+        "401":
+          description: Não autorizado
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "404":
+          description: Campanha não encontrada
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+      summary: Iniciar campanha
+      tags:
+      - campaigns
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Realiza o login do usuário e retorna um token de acesso para autenticação.
+      parameters:
+      - description: Credenciais de Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/endpoints.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token de Acesso
+          schema:
+            $ref: '#/definitions/endpoints.TokenResponse'
+        "400":
+          description: Requisição inválida
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "401":
+          description: Credenciais inválidas
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+        "500":
+          description: Erro interno
+          schema:
+            $ref: '#/definitions/internalerror.ErrorResponse'
+      summary: Autenticar usuário
+      tags:
+      - auth
+swagger: "2.0"

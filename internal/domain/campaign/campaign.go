@@ -16,21 +16,33 @@ const (
 	Deleted  string = "Deleted"
 )
 
+// Campaign godoc
+// @Description Detalhes da campanha
+// @Accept json
+// @Produce json
+// @Success 200 {object} Campaign
+// @Failure 400 {object} internalerror.ErrorResponse
 type Campaign struct {
-	ID        string    `validate:"required" gorm:"size:50;not null"`
-	Name      string    `validate:"min=5,max=50" gorm:"size:100;not null"`
-	CreatedOn time.Time `validate:"required" gorm:"not null"`
-	UpdatedOn time.Time
-	Content   string    `validate:"min=5,max=1024" gorm:"size:1024;not null"`
-	Contacts  []Contact `validate:"min=1,dive"` //dive para validar um struc dentro de outra
-	Status    string    `gorm:"size:20;not null"`
-	CreatedBy string    `validate:"required,email" gorm:"size:50;not null"`
+	ID        string    `json:"id"  validate:"required" gorm:"size:50;not null"`
+	Name      string    `json:"name" validate:"min=5,max=50" gorm:"size:100;not null"`
+	CreatedOn time.Time `json:"created_on" validate:"required" gorm:"not null"`
+	UpdatedOn time.Time `json:"updated_on"`
+	Content   string    `json:"content" validate:"min=5,max=1024" gorm:"size:1024;not null"`
+	Contacts  []Contact `json:"contacts" validate:"min=1,dive"` //dive para validar um struc dentro de outra
+	Status    string    `json:"status" gorm:"size:20;not null"`
+	CreatedBy string    `json:"created_by" validate:"required,email" gorm:"size:50;not null"`
 }
 
+// Contact godoc
+// @Description Detalhes do contato da campanha
+// @Accept json
+// @Produce json
+// @Success 200 {object} Contact
+// @Failure 400 {object} internalerror.ErrorResponse
 type Contact struct {
-	ID         string `gorm:"size:50"`
-	Email      string `validate:"email" gorm:"size:50"`
-	CampaignId string `gorm:"size:50"`
+	ID         string `json:"id" gorm:"size:50"`
+	Email      string `json:"email" validate:"email" gorm:"size:50"`
+	CampaignId string `json:"campaign_id" gorm:"size:50"`
 }
 
 func (c *Campaign) Cancel() {

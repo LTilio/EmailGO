@@ -17,6 +17,18 @@ type TokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
+// Login godoc
+// @Summary Autenticar usuário
+// @Description Realiza o login do usuário e retorna um token de acesso para autenticação.
+// @Tags auth
+// @Accept  json
+// @Produce  json
+// @Param login body LoginRequest true "Credenciais de Login"
+// @Success 200 {object} TokenResponse "Token de Acesso"
+// @Failure 400 {object} internalerror.ErrorResponse "Requisição inválida"
+// @Failure 401 {object} internalerror.ErrorResponse "Credenciais inválidas"
+// @Failure 500 {object} internalerror.ErrorResponse "Erro interno"
+// @Router /login [post]
 func Login(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
 	var loginRequest LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&loginRequest)
