@@ -79,7 +79,6 @@ func (s *ServiceImp) SendMailAndUpdateStatus(campaignSaved *Campaign) {
 
 }
 
-// TODO: make unit test
 func (s *ServiceImp) Start(id string) error {
 
 	campaignSaved, err := s.getAndValidateStatusIsPending(id)
@@ -88,19 +87,7 @@ func (s *ServiceImp) Start(id string) error {
 		return err
 	}
 
-	// dá pra chamar metodos também, só colocar o go na frente e esse metodo vai ser chamado em paralero
 	go s.SendMailAndUpdateStatus(campaignSaved)
-
-	// //função anonima em paralelo - melhorando a performance do metodo
-	// go func() {
-	// 	err := s.SendMail(campaignSaved)
-	// 	if err != nil {
-	// 		campaignSaved.Fail()
-	// 	} else {
-	// 		campaignSaved.Done()
-	// 	}
-	// 	s.Repository.Update(campaignSaved)
-	// }()
 
 	campaignSaved.Started()
 	err = s.Repository.Update(campaignSaved)

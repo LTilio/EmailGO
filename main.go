@@ -3,6 +3,7 @@ package main
 import (
 	"EmailGO/internal/domain/campaign"
 	"EmailGO/internal/endpoints"
+	"EmailGO/internal/infra/config"
 	"EmailGO/internal/infra/database"
 	"EmailGO/internal/infra/mail"
 	"log"
@@ -37,6 +38,7 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(config.CorsConfig()) // middleware para o cors
 
 	db := database.NewDb()
 	campaignService := campaign.ServiceImp{
